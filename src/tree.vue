@@ -133,6 +133,11 @@
                 return null;
 
             },
+            insertNode(data){
+                //insert first level node
+                let newItem = this.initializeDataItem(data)
+                this.data.splice(0, 0, newItem)
+            },
             initializeDataItem(item) {
                 function Model(item, textFieldName, valueFieldName, childrenFieldName, collapse) {
                     this.id = item.id || ITEM_ID++
