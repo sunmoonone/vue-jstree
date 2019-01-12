@@ -110,6 +110,28 @@
                     }
                 }
             },
+            findNodeContainer(nodeId, items, childrenField) {
+                // let queue=[].concat(items)
+                // while (queue.length>0) {
+                //     let n = queue.splice(0, 1)[0]
+                //     if(n.id === nodeId){
+                //         return items;
+                //     }
+                // }
+                for (let i = 0, len = items.length; i < len; i++) {
+                    if (items[i].id === nodeId) {
+                        return items;
+                    }
+                    if (items[i][childrenField]) {
+                        let ret = this.findNodeContainer(nodeId, items[i][childrenField], childrenField)
+                        if (ret !== null) {
+                            return ret;
+                        }
+                    }
+                }
+                return null;
+
+            },
             initializeDataItem(item) {
                 function Model(item, textFieldName, valueFieldName, childrenFieldName, collapse) {
                     this.id = item.id || ITEM_ID++
@@ -125,15 +147,22 @@
 
                 let node = Object.assign(new Model(item, this.textFieldName, this.valueFieldName, this.childrenFieldName, this.collapse), item)
                 let self = this
-                node.addBefore = function (data, selectedNode) {
-                    let newItem = self.initializeDataItem(data)
-                    let index = selectedNode.parentItem.findIndex(t => t.id === node.id)
-                    selectedNode.parentItem.splice(index, 0, newItem)
+                node.addBefore = function (data) {
+                    let container = self.findNodeContainer(node.id, self.data, self.childrenFieldName)
+                    if (container !== null) {
+
+                        let newItem = self.initializeDataItem(data)
+                        let index = container.findIndex(t => t.id === node.id)
+                        container.splice(index, 0, newItem)
+                    }
                 }
-                node.addAfter = function (data, selectedNode) {
-                    let newItem = self.initializeDataItem(data)
-                    let index = selectedNode.parentItem.findIndex(t => t.id === node.id) + 1
-                    selectedNode.parentItem.splice(index, 0, newItem)
+                node.addAfter = function (data) {
+                    let container = self.findNodeContainer(node.id, self.data, self.childrenFieldName)
+                    if (container !== null) {
+                        let newItem = self.initializeDataItem(data)
+                        let index = container.findIndex(t => t.id === node.id) + 1
+                        container.splice(index, 0, newItem)
+                    }
                 }
                 node.addChild = function (data) {
                     let newItem = self.initializeDataItem(data)
@@ -151,6 +180,9 @@
                     self.handleRecursionNodeChildren(node, node => {
                         node.opened = false
                     })
+                }
+                node.hello = function () {
+                    console.log('call hello')
                 }
                 return node
             },
@@ -259,8 +291,8 @@
                 }
                 if (this.draggedItem) {
                     if (this.draggedItem.parentItem === oriItem[this.childrenFieldName]
-                            || this.draggedItem.item === oriItem
-                            || (oriItem[this.childrenFieldName] && oriItem[this.childrenFieldName].findIndex(t => t.id === this.draggedItem.item.id) !== -1)) {
+                        || this.draggedItem.item === oriItem
+                        || (oriItem[this.childrenFieldName] && oriItem[this.childrenFieldName].findIndex(t => t.id === this.draggedItem.item.id) !== -1)) {
                         return;
                     }
                     if (!!oriItem[this.childrenFieldName]) {
