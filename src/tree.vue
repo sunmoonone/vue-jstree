@@ -24,7 +24,8 @@
                 <template slot-scope="_">
                     <slot :vm="_.vm" :model="_.model">
                         <i :class="_.vm.themeIconClasses" role="presentation" v-if="!_.model.loading"></i>
-                        <span v-html="_.model[textFieldName]"></span>
+                        <input @keyup.esc="_.model.cancelEditing" @keyup.enter="_.model.cancelEditing" @blur="_.model.cancelEditing" v-model="_.model[textFieldName]" v-if="_.model.editing">
+                        <span v-html="_.model[textFieldName]" v-else></span>
                     </slot>
                 </template>
             </tree-item>
@@ -142,6 +143,7 @@
                     this.selected = item.selected || false
                     this.disabled = item.disabled || false
                     this.loading = item.loading || false
+                    this.editing = item.editing || false
                     this[childrenFieldName] = item[childrenFieldName] || []
                 }
 
@@ -162,6 +164,14 @@
                         let newItem = self.initializeDataItem(data)
                         let index = container.findIndex(t => t.id === node.id) + 1
                         container.splice(index, 0, newItem)
+                    }
+                }
+                node.deleteSelf = function(){
+
+                    let container = self.findNodeContainer(node.id, self.data, self.childrenFieldName)
+                    if (container !== null) {
+                        let index = container.findIndex(t => t.id === node.id)
+                        container.splice(index,1)
                     }
                 }
                 node.addBefore = function (data, selectedNode) {
@@ -191,8 +201,8 @@
                         node.opened = false
                     })
                 }
-                node.hello = function () {
-                    console.log('call hello')
+                node.cancelEditing = function () {
+                    node.editing = false;
                 }
                 return node
             },

@@ -14,7 +14,8 @@
             <i class="tree-icon tree-checkbox" role="presentation" v-if="showCheckbox && !model.loading"></i>
             <slot :vm="this" :model="model">
                 <i :class="themeIconClasses" role="presentation" v-if="!model.loading"></i>
-                <span v-html="model[textFieldName]"></span>
+                <input @keyup.esc="model.cancelEditing" @keyup.enter="model.cancelEditing" @blur="model.cancelEditing" v-model="model[textFieldName]" v-if="model.editing">
+                <span v-else v-html="model[textFieldName]"></span>
             </slot>
         </div>
         <ul role="group" ref="group" class="tree-children" v-if="isFolder" :style="groupStyle">
@@ -40,8 +41,9 @@
                        :klass="index === model[childrenFieldName].length-1?'tree-last':''">
                 <template slot-scope="_">
                     <slot :vm="_.vm" :model="_.model">
-                        <i :class="_.vm.themeIconClasses" role="presentation" v-if="!model.loading"></i>
-                        <span v-html="_.model[textFieldName]"></span>
+                        <i :class="_.vm.themeIconClasses" role="presentation" v-if="!_.model.loading"></i>
+                        <input @keyup.esc="_.model.cancelEditing" @keyup.enter="_.model.cancelEditing" @blur="_.model.cancelEditing" v-model="_.model[textFieldName]" v-if="_.model.editing">
+                        <span v-html="_.model[textFieldName]" v-else></span>
                     </slot>
                 </template>
             </tree-item>
