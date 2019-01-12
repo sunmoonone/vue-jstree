@@ -208,6 +208,7 @@
                 }
                 node.cancelEditing = function () {
                     node.editing = false;
+                    self.$emit('cancel-editing', node)
                 }
                 return node
             },
