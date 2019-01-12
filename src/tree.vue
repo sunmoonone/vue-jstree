@@ -147,7 +147,7 @@
 
                 let node = Object.assign(new Model(item, this.textFieldName, this.valueFieldName, this.childrenFieldName, this.collapse), item)
                 let self = this
-                node.addBefore = function (data) {
+                node.insertBefore = function(data){
                     let container = self.findNodeContainer(node.id, self.data, self.childrenFieldName)
                     if (container !== null) {
 
@@ -156,13 +156,23 @@
                         container.splice(index, 0, newItem)
                     }
                 }
-                node.addAfter = function (data) {
+                node.insertAfter = function(data){
                     let container = self.findNodeContainer(node.id, self.data, self.childrenFieldName)
                     if (container !== null) {
                         let newItem = self.initializeDataItem(data)
                         let index = container.findIndex(t => t.id === node.id) + 1
                         container.splice(index, 0, newItem)
                     }
+                }
+                node.addBefore = function (data, selectedNode) {
+                    let newItem = self.initializeDataItem(data)
+                    let index = selectedNode.parentItem.findIndex(t => t.id === node.id)
+                    selectedNode.parentItem.splice(index, 0, newItem)
+                }
+                node.addAfter = function (data, selectedNode) {
+                    let newItem = self.initializeDataItem(data)
+                    let index = selectedNode.parentItem.findIndex(t => t.id === node.id) + 1
+                    selectedNode.parentItem.splice(index, 0, newItem)
                 }
                 node.addChild = function (data) {
                     let newItem = self.initializeDataItem(data)
