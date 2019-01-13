@@ -14,7 +14,7 @@
             <i class="tree-icon tree-checkbox" role="presentation" v-if="showCheckbox && !model.loading"></i>
             <slot :vm="this" :model="model">
                 <i :class="themeIconClasses" role="presentation" v-if="!model.loading"></i>
-                <input @keyup.esc="model.cancelEditing" @keyup.enter="model.cancelEditing" @blur="model.cancelEditing" v-model="model[textFieldName]" v-if="model.editing">
+                <input v-focus @keyup.esc="model.cancelEditing" @keyup.enter="model.cancelEditing" @blur="model.cancelEditing" v-model="model[textFieldName]" v-if="model.editing">
                 <span v-else v-html="model[textFieldName]"></span>
             </slot>
         </div>
@@ -42,7 +42,7 @@
                 <template slot-scope="_">
                     <slot :vm="_.vm" :model="_.model">
                         <i :class="_.vm.themeIconClasses" role="presentation" v-if="!_.model.loading"></i>
-                        <input @keyup.esc="_.model.cancelEditing" @keyup.enter="_.model.cancelEditing" @blur="_.model.cancelEditing" v-model="_.model[textFieldName]" v-if="_.model.editing">
+                        <input v-focus @keyup.esc="_.model.cancelEditing" @keyup.enter="_.model.cancelEditing" @blur="_.model.cancelEditing" v-model="_.model[textFieldName]" v-if="_.model.editing">
                         <span v-html="_.model[textFieldName]" v-else></span>
                     </slot>
                 </template>
@@ -174,7 +174,7 @@
           handleItemToggle (e) {
               if (this.isFolder) {
                   this.model.opened = !this.model.opened
-                  this.onItemToggle(this, this.model)
+                  // this.onItemToggle(this, this.model)
               }
           },
           handleGroupMaxHeight () {
