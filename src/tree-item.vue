@@ -35,6 +35,7 @@
                        :drag-over-background-color="dragOverBackgroundColor"
                        :on-item-click="onItemClick"
                        :on-item-toggle="onItemToggle"
+                       :on-item-selected="onItemSelected"
                        :on-item-drag-start="onItemDragStart"
                        :on-item-drag-end="onItemDragEnd"
                        :on-item-drop="onItemDrop"
