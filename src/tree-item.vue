@@ -66,6 +66,9 @@
           parentItem: {type: Array},
           draggable: {type: Boolean, default: false},
           dragOverBackgroundColor: {type: String},
+          onItemSelected:{
+              type: Function, default: () => false
+          },
           onItemClick: {
               type: Function, default: () => false
           },
@@ -102,6 +105,12 @@
           },
           data (newValue) {
               this.model = newValue
+          },
+          'model.selected': {
+              handler: function (val, oldVal) {
+                  this.onItemSelected(this, this.model)
+              },
+              deep: true
           },
           'model.opened': {
               handler: function (val, oldVal) {

@@ -16,6 +16,7 @@
                        :draggable="draggable"
                        :drag-over-background-color="dragOverBackgroundColor"
                        :on-item-click="onItemClick"
+                       :on-item-selected="onItemSelected"
                        :on-item-toggle="onItemToggle"
                        :on-item-drag-start="onItemDragStart"
                        :on-item-drag-end="onItemDragEnd"
@@ -240,6 +241,9 @@
                         }
                     }
                 }
+            },
+            onItemSelected(node, nodeModel){
+                this.$emit('item-selected', node, nodeModel)
             },
             onItemClick(oriNode, oriItem, e) {
                 if (this.multiple) {
