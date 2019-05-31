@@ -241,6 +241,7 @@
               }
           }
           this.events = events
+
       },
       mounted () {
           this.handleGroupMaxHeight()
